@@ -8,6 +8,7 @@ A website showing weather for trip planning
 * CSS
 * JavaScript
 * Server-Side API
+* moment.js
 
 ## Screenshot
 Here is a screenshot of the completed site:
