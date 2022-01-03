@@ -6,27 +6,49 @@ var citySearchTerm = document.querySelector("#weather-locaiton");
 var lat = "";
 var lon = "";
 
-var getWeatherInfo = function(location) {
+var getLocationInfo = function(location) {
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey;
     fetch(apiUrl) 
     .then(function(response){
         response.json().then(function(data){
-            displayWeather(data,location); 
+            getLonLatLoc(data,location); 
         });
     });
 };
+//This will now get the weather information from the onecall api
+var getWeatherInfo = function(lon, lat) {
+    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lon + "&lon=" + lat + "&appid=" + apiKey
+    fetch(apiUrl).then(function(response){
+        response.json().then(function(data){
+            console.log(data);
+        });
+    });
+   
+    /*fetch(weatherApiUrl) 
+    .then(function(secondResponse){
+        secondResponse.json().then(function(weatherData){
+           //START HERE AND LOOK AT MODULE FOR CREATING THIS AGAIN
+           
+            getLonLatLoc(data,location); 
+        });
+    });*/
+};
 
-var displayWeather = function(weather, location){
+
+var getLonLatLoc = function(weather, location){
     //clear old content
     forecastContainerEl.textContent="";
     citySearchTerm.textContent= location;
-    var lat = weather.coord.lat;
-    var lon = weather.coord.lon;
+    //gets lat and lon coord
+
+    var lon = weather.coord.lat;
+    var lat = weather.coord.lon;
     
     console.log(lon);
     console.log(lat);
     console.log(weather);
     console.log(location);
+    getWeatherInfo(lon, lat);
 };
 
 
@@ -35,7 +57,7 @@ var formSubmitHandler = function(event){
     var city = cityInputEl.value.trim();
 
     if(city){
-        getWeatherInfo(city);
+        getLocationInfo(city);
         cityInputEl.value = "";
     }
     else{
@@ -43,3 +65,4 @@ var formSubmitHandler = function(event){
     }
 };
 userFormEl.addEventListener("submit", formSubmitHandler);
+
