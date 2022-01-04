@@ -78,6 +78,24 @@ var displayWeather = function(getWeather){
     var uvIndex = document.createElement("li");
     uvIndex.textContent = "UV Index: " + getWeather.current.uvi;
     ulElement.appendChild(uvIndex);
+    ulElement.style.width = "200px";
+    var uv=getWeather.current.uvi;
+
+    if (uv > 0 && uv < 3){
+        uvIndex.style.backgroundColor = "green";
+    }
+    else if (uv > 2 && uv < 6){
+        uvIndex.style.backgroundColor = "yellow";
+    }
+    else if (uv>5 && uv<8){
+        uvIndex.style.backgroundColor = "orange";
+    }
+    else if (uv>7 && uv<11){
+        uvIndex.style.backgroundColor = "red";
+    }
+    else if(uv >10){
+        uvIndex.style.backgroundColor = "purple";
+    }
     
 };
 
