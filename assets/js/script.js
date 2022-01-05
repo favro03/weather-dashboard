@@ -17,8 +17,22 @@ var day5List = document.getElementById('day5List');
 var dataEl = document.getElementById('data');
 var lat = "";
 var lon = "";
-
 var unixTimestamp=0;
+var searchHistory=[];
+
+//load local storage searches function
+window.onload = function(){
+    searchHistory =localStorage.getItem("city")
+    console.log(searchHistory);
+};
+//function to store data
+var searchStorage = function(searchName){
+    
+    searchHistory.push(searchName);
+    var strArr = JSON.stringify(searchHistory);
+    localStorage.setItem("city", strArr);
+    console.log(searchHistory);
+}
 
 var getLocationInfo = function(location) {
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey;
@@ -37,7 +51,9 @@ var getLocationInfo = function(location) {
         //notice this '.catch()' getting chained onto the end of the '.then()' method
         alert("Unable to connect to open weather map");
     });
+
 };
+
 
 //this function will convert time
 var unixTimeConverter = function(unixTime){
@@ -65,16 +81,19 @@ var getLonLatLoc = function(weather, location){
    
     citySearchTerm.textContent= weather.name + " (" + unixTimeConverter(unixTimestamp) + ") ";
     weatherIcon('icon', iconId);
-    
+    //weather name variable
+    var searchName = weather.name;
     //gets lat and lon coord
 
     var lon = weather.coord.lat;
     var lat = weather.coord.lon;
     
+    console.log(searchName);
     console.log(weather);
     console.log(location);
    
     getWeatherInfo(lon, lat);
+    searchStorage(searchName);
 };
  
 
@@ -253,6 +272,8 @@ var formSubmitHandler = function(event){
     else{
         alert("Please enter a City");
     }
+
+    
     
 };
 userFormEl.addEventListener("submit", formSubmitHandler);
