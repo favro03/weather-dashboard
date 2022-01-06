@@ -19,6 +19,22 @@ var lat = "";
 var lon = "";
 
 var unixTimestamp=0;
+var historyArr =[];
+var newArr=[];
+
+window.onload = function(){
+    var retrieveData = localStorage.getItem("city");
+    historyArr = JSON.parse(retrieveData);
+    //historyArr=newArr;
+    console.log(historyArr);
+};
+//local storage
+var locationStorage = function(cityName){
+   
+    historyArr.push(cityName);
+    console.log(historyArr);
+    localStorage.setItem("city", JSON.stringify(historyArr));
+};
 
 var getLocationInfo = function(location) {
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey;
@@ -65,7 +81,8 @@ var getLonLatLoc = function(weather, location){
    
     citySearchTerm.textContent= weather.name + " (" + unixTimeConverter(unixTimestamp) + ") ";
     weatherIcon('icon', iconId);
-    
+    var cityName = weather.name;
+    locationStorage(cityName);
     //gets lat and lon coord
 
     var lon = weather.coord.lat;
@@ -75,6 +92,7 @@ var getLonLatLoc = function(weather, location){
     console.log(location);
    
     getWeatherInfo(lon, lat);
+    
 };
  
 
