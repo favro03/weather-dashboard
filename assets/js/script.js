@@ -18,7 +18,7 @@ var dataEl = document.getElementById('data');
 var lat = "";
 var lon = "";
 var unixTimestamp=0;
-var searchHistory=[];
+
 
 //load local storage searches function
 window.onload = function(){
@@ -27,7 +27,8 @@ window.onload = function(){
 };
 //function to store data
 var searchStorage = function(searchName){
-    
+    console.log(searchName);
+    var searchHistory=[];
     searchHistory.push(searchName);
     var strArr = JSON.stringify(searchHistory);
     localStorage.setItem("city", strArr);
@@ -81,10 +82,10 @@ var getLonLatLoc = function(weather, location){
    
     citySearchTerm.textContent= weather.name + " (" + unixTimeConverter(unixTimestamp) + ") ";
     weatherIcon('icon', iconId);
-    //weather name variable
+    //weather city variable
     var searchName = weather.name;
+    
     //gets lat and lon coord
-
     var lon = weather.coord.lat;
     var lat = weather.coord.lon;
     
@@ -93,6 +94,7 @@ var getLonLatLoc = function(weather, location){
     console.log(location);
    
     getWeatherInfo(lon, lat);
+    console.log(searchName);
     searchStorage(searchName);
 };
  
@@ -277,4 +279,3 @@ var formSubmitHandler = function(event){
     
 };
 userFormEl.addEventListener("submit", formSubmitHandler);
-
