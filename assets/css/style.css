@@ -86,7 +86,8 @@ h3{
   width: 100%;
   display: block;
   margin: 5px 0;
-  
+  border-radius: var(--border-radius);
+  color: var(--primary);
   border: none;
   outline: none;
   background-color: gray;
@@ -145,14 +146,29 @@ h3{
   padding: 0;
   list-style: none;
 }
-
+#history-container{
+  text-align: center;
+}
 .list-item {
   margin-bottom: 10px;
-  padding: 1.5%;
+  text-align: center;
   border-radius: var(--border-radius);
-  background-color: var(--light-dark);
+  background-color: gray;
   color: var(--primary);
   text-decoration: none;
+  width: 100%;
+
+  font-size: 1.3rem;
+  
+  padding: 6px 5px;
+  
+  display: block;
+  margin: 5px 0;
+  
+  
+  
+  transform: translate(-1px, -1px);
+  
 }
 
 .list-item:hover {

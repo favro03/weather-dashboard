@@ -1,4 +1,4 @@
-var apiKey = "733003f902b435aff7ba3aae5ba752e6";
+var apiKey = "8469f67817c39bdbdcd2e3b3fa5868b0";
 var userFormEl = document.querySelector("#user-form");
 var cityInputEl = document.querySelector("#city");
 var forecastContainerEl = document.querySelector("#forecast-container");
@@ -15,6 +15,7 @@ var day3List = document.getElementById('day3List');
 var day4List = document.getElementById('day4List');
 var day5List = document.getElementById('day5List');
 var dataEl = document.getElementById('data');
+var historyContainer = document.querySelector("#historyContainer");
 var lat = "";
 var lon = "";
 
@@ -22,19 +23,42 @@ var unixTimestamp=0;
 var historyArr =[];
 var newArr=[];
 
+
+var displaySearchHistory=function(historyArr){ 
+    var uniqueArr = [...new Set(historyArr)];
+    historyArr = uniqueArr;
+    console.log(historyArr);
+    for(var i = 0; i<historyArr.length; i++){
+        var historyName = document.createElement("button");
+        historyName.classList = "list-item flex-row justify-space-between align-center";
+        historyName.textContent = historyArr[i];
+        historyContainer.appendChild(historyName);
+        historyContainer.style.display = "block";
+    };
+};
+
 window.onload = function(){
     var retrieveData = localStorage.getItem("city");
     historyArr = JSON.parse(retrieveData);
-    //historyArr=newArr;
     console.log(historyArr);
+    //historyArr=newArr;
+    displaySearchHistory(historyArr);
+    //console.log(newArr);
+    
 };
+
+
+
 //local storage
 var locationStorage = function(cityName){
-   
-    historyArr.push(cityName);
+    historyContainer.textContent="";
     console.log(historyArr);
+    historyArr.push(cityName);
+    displaySearchHistory(historyArr);
     localStorage.setItem("city", JSON.stringify(historyArr));
+    //displayHistory(historyArr);
 };
+
 
 var getLocationInfo = function(location) {
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey;
@@ -272,4 +296,3 @@ var formSubmitHandler = function(event){
     
 };
 userFormEl.addEventListener("submit", formSubmitHandler);
-
