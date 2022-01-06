@@ -20,6 +20,7 @@ var lon = "";
 var unixTimestamp=0;
 
 
+
 //load local storage searches function
 window.onload = function(){
     searchHistory =localStorage.getItem("city")
@@ -30,9 +31,11 @@ var searchStorage = function(searchName){
     console.log(searchName);
     var searchHistory=[];
     searchHistory.push(searchName);
+    
+    console.log(searchHistory);
     var strArr = JSON.stringify(searchHistory);
     localStorage.setItem("city", strArr);
-    console.log(searchHistory);
+    
 }
 
 var getLocationInfo = function(location) {
@@ -84,7 +87,7 @@ var getLonLatLoc = function(weather, location){
     weatherIcon('icon', iconId);
     //weather city variable
     var searchName = weather.name;
-    
+    push(searchName);
     //gets lat and lon coord
     var lon = weather.coord.lat;
     var lat = weather.coord.lon;
