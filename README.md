@@ -7,17 +7,17 @@ A website showing weather for trip planning
 * HTML
 * CSS
 * JavaScript
+* Bootstrap
 * Server-Side API
-* moment.js
 
 ## Screenshot
 Here is a screenshot of the completed site:
 
-![Weather Dashboard](/assets/images/Scheduler.png)
+![Weather Dashboard](/assets/images/WeatherDashboard.png)
 
 ## Link
 Link to the Weather Dashobard:
 
-TBD
+https://favro03.github.io/weather-dashboard/
 
 

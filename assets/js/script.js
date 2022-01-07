@@ -36,7 +36,7 @@ var displaySearchHistory=function(historyArr){
 
     for(var i = 0; i<historyArr.length; i++){
         var historyBtn = document.createElement("input");
-        historyBtn.classList = "list-item flex-row justify-space-between align-center";
+        historyBtn.classList = "btn-history flex-row justify-space-between align-center";
         historyBtn.type = "button";
         historyBtn.name = "button" + i;
         historyBtn.value = historyArr[i];
