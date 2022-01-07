@@ -18,48 +18,71 @@ var dataEl = document.getElementById('data');
 var historyContainer = document.querySelector("#historyContainer");
 var lat = "";
 var lon = "";
-
+var clickCity="";
 var unixTimestamp=0;
 var historyArr =[];
-var newArr=[];
 
-
+//function to get the location from the history searches
+var getButtonVar = function(){
+    var currentCity = getButtonVar.caller.arguments[0].target.id;
+    var historyCity = (document.getElementById(currentCity).value);
+    getLocationInfo(historyCity);
+    dataEl.style.display = "block";
+}
+//Display History searches
 var displaySearchHistory=function(historyArr){ 
     var uniqueArr = [...new Set(historyArr)];
     historyArr = uniqueArr;
-    console.log(historyArr);
+
     for(var i = 0; i<historyArr.length; i++){
-        var historyName = document.createElement("button");
-        historyName.classList = "list-item flex-row justify-space-between align-center";
-        historyName.textContent = historyArr[i];
-        historyContainer.appendChild(historyName);
-        historyContainer.style.display = "block";
+        var historyBtn = document.createElement("input");
+        historyBtn.classList = "list-item flex-row justify-space-between align-center";
+        historyBtn.type = "button";
+        historyBtn.name = "button" + i;
+        historyBtn.value = historyArr[i];
+        historyBtn.id = i;
+        historyBtn.setAttribute("onClick","getButtonVar()");
+        document.getElementById('historyContainer').appendChild(historyBtn);
     };
 };
 
-window.onload = function(){
-    var retrieveData = localStorage.getItem("city");
-    historyArr = JSON.parse(retrieveData);
-    console.log(historyArr);
-    //historyArr=newArr;
-    displaySearchHistory(historyArr);
-    //console.log(newArr);
-    
+var clearData = function(){
+    ulElement.textContent="";
+    day1DateEl.textContent ="";
+    day1List.textContent = "";
+    day2DateEl.textContent ="";
+    day2List.textContent = "";
+    day3DateEl.textContent ="";
+    day3List.textContent = "";
+    day4DateEl.textContent ="";
+    day4List.textContent = "";
+    day5DateEl.textContent ="";
+    day5List.textContent = "";
 };
-
-
+//loads search history on page load
+window.onload = function(){
+    if(localStorage.getItem("city") === null){
+        historyContainer.textContent = "No Cities Searched";
+    }
+    else {
+        var retrieveData = localStorage.getItem("city");
+        historyArr = JSON.parse(retrieveData);
+        displaySearchHistory(historyArr);
+    }
+};
 
 //local storage
 var locationStorage = function(cityName){
     historyContainer.textContent="";
-    console.log(historyArr);
-    historyArr.push(cityName);
+    historyArr = JSON.parse(window.localStorage.getItem("city")) || [];
+    var value = cityName;
+    if(historyArr.indexOf(value)== -1){
+        historyArr.push(value);
+    }
     displaySearchHistory(historyArr);
     localStorage.setItem("city", JSON.stringify(historyArr));
-    //displayHistory(historyArr);
 };
-
-
+//takes the search input and gets the location/weather info
 var getLocationInfo = function(location) {
     var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey;
     fetch(apiUrl).then(function(response){
@@ -74,9 +97,9 @@ var getLocationInfo = function(location) {
         }
     })
     .catch(function(error){
-        //notice this '.catch()' getting chained onto the end of the '.then()' method
         alert("Unable to connect to open weather map");
     });
+    clearData();
 };
 
 //this function will convert time
@@ -92,34 +115,24 @@ var weatherIcon = function(id, iconId){
     document.getElementById(id).src = "http://openweathermap.org/img/w/"+ iconId +".png";
 };
 
-//function to the the longitute and latitude to feed the onecall api
+//function to get the the longitute and latitude to feed the onecall api
 var getLonLatLoc = function(weather, location){
-    //clear old content
-    forecastContainerEl.textContent="";
-
     //variable for date
     unixTimestamp = weather.dt;
-    
     //variable for icon
     var iconId = weather.weather[0].icon;  
-   
+    //display city name and date
     citySearchTerm.textContent= weather.name + " (" + unixTimeConverter(unixTimestamp) + ") ";
     weatherIcon('icon', iconId);
+    //variable holding the city name and pushing that to storage
     var cityName = weather.name;
     locationStorage(cityName);
     //gets lat and lon coord
-
     var lon = weather.coord.lat;
     var lat = weather.coord.lon;
-    
-    console.log(weather);
-    console.log(location);
-   
     getWeatherInfo(lon, lat);
-    
 };
  
-
 //This will now get the weather information from the onecall api
 var getWeatherInfo = function(lon, lat) {
     var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lon + "&lon=" + lat + "&units=imperial&appid=" + apiKey
@@ -134,8 +147,8 @@ var getWeatherInfo = function(lon, lat) {
         }
     });
 };
+//displays all the weather information to the large and small cards
 var displayWeather = function(getWeather){
-    console.log(getWeather);
     var temp = document.createElement("li");
     temp.textContent = "Temp: " + getWeather.current.temp + "℉";
     ulElement.appendChild(temp);
@@ -227,7 +240,6 @@ var displayWeather = function(getWeather){
     day3Humidity.textContent = "Humidity: " + getWeather.daily[3].humidity + " %";
     day3List.appendChild(day3Humidity); 
 
-
 //Day 4
     //Day 4 Date
     var date4 = getWeather.daily[4].dt;
@@ -267,20 +279,9 @@ var displayWeather = function(getWeather){
     day5List.appendChild(day5Humidity); 
 };
 
-
 var formSubmitHandler = function(event){
     event.preventDefault();
-    ulElement.textContent="";
-    day1DateEl.textContent ="";
-    day1List.textContent = "";
-    day2DateEl.textContent ="";
-    day2List.textContent = "";
-    day3DateEl.textContent ="";
-    day3List.textContent = "";
-    day4DateEl.textContent ="";
-    day4List.textContent = "";
-    day5DateEl.textContent ="";
-    day5List.textContent = "";
+    clearData();
 
     var city = cityInputEl.value.trim();
 
@@ -292,7 +293,7 @@ var formSubmitHandler = function(event){
     }
     else{
         alert("Please enter a City");
+        dataEl.style.display = "none";
     }
-    
 };
 userFormEl.addEventListener("submit", formSubmitHandler);
