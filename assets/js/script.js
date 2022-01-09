@@ -1,26 +1,15 @@
 var apiKey = "8469f67817c39bdbdcd2e3b3fa5868b0";
 var userFormEl = document.querySelector("#user-form");
 var cityInputEl = document.querySelector("#city");
-var forecastContainerEl = document.querySelector("#forecast-container");
 var citySearchTerm = document.querySelector("#weather-locaiton");
 var ulElement =document.getElementById('list');
-var day1DateEl = document.querySelector("#day1Date");
-var day2DateEl = document.querySelector("#day2Date");
-var day3DateEl = document.querySelector("#day3Date");
-var day4DateEl = document.querySelector("#day4Date");
-var day5DateEl = document.querySelector("#day5Date");
-var day1List = document.getElementById('day1List');
-var day2List = document.getElementById('day2List');
-var day3List = document.getElementById('day3List');
-var day4List = document.getElementById('day4List');
-var day5List = document.getElementById('day5List');
 var dataEl = document.getElementById('data');
 var historyContainer = document.querySelector("#historyContainer");
 var lat = "";
 var lon = "";
-var clickCity="";
 var unixTimestamp=0;
 var historyArr =[];
+var futureContainer = document.getElementById('future-container');
 
 //function to get the location from the history searches
 var getButtonVar = function(){
@@ -48,16 +37,8 @@ var displaySearchHistory=function(historyArr){
 
 var clearData = function(){
     ulElement.textContent="";
-    day1DateEl.textContent ="";
-    day1List.textContent = "";
-    day2DateEl.textContent ="";
-    day2List.textContent = "";
-    day3DateEl.textContent ="";
-    day3List.textContent = "";
-    day4DateEl.textContent ="";
-    day4List.textContent = "";
-    day5DateEl.textContent ="";
-    day5List.textContent = "";
+    futureContainer.textContent="";
+   
 };
 //loads search history on page load
 window.onload = function(){
@@ -147,6 +128,7 @@ var getWeatherInfo = function(lon, lat) {
         }
     });
 };
+
 //displays all the weather information to the large and small cards
 var displayWeather = function(getWeather){
     var temp = document.createElement("li");
@@ -183,100 +165,38 @@ var displayWeather = function(getWeather){
         uvIndex.style.backgroundColor = "purple";
     }
 //5 Day Forecast
-//Day 1
-    //Day 1 date
-    var date1 = getWeather.daily[1].dt;
-    var iconDay1 = getWeather.daily[1].weather[0].icon;
-    day1DateEl.textContent = "(" + unixTimeConverter(date1) + ")";
-    weatherIcon("icon1", iconDay1);
-    //Day 1 temp
-    var day1Temp = document.createElement("li");
-    day1Temp.textContent = "Temp: " + getWeather.daily[1].temp.day + "℉";
-    day1List.appendChild(day1Temp);
-    //Day 1 Wind
-    var day1WindSpeed = document.createElement("li");
-    day1WindSpeed.textContent = "Wind: " + getWeather.daily[1].wind_speed + " MPH";
-    day1List.appendChild(day1WindSpeed);
-    //Day 1 Humidity
-    var day1Humidity = document.createElement("li");
-    day1Humidity.textContent = "Humidity: " + getWeather.daily[1].humidity + " %";
-    day1List.appendChild(day1Humidity);
+    for(var i = 1; i<6; i++){
+        var date = getWeather.daily[i].dt;
+        var iconDay = getWeather.daily[i].weather[0].icon;
 
-//Day 2
-    //Day 2 Date
-    var date2 = getWeather.daily[2].dt;
-    var iconDay2 = getWeather.daily[2].weather[0].icon;
-    day2DateEl.textContent = "(" + unixTimeConverter(date2) + ")";
-    weatherIcon("icon2", iconDay2);
-    //Day 2 temp
-    var day2Temp = document.createElement("li");
-    day2Temp.textContent = "Temp: " + getWeather.daily[1].temp.day + "℉";
-    day2List.appendChild(day2Temp);
-    //Day 2 Wind
-    var day2WindSpeed = document.createElement("li");
-    day2WindSpeed.textContent = "Wind: " + getWeather.daily[1].wind_speed + " MPH";
-    day2List.appendChild(day2WindSpeed);
-    //Day 2 Humidity
-    var day2Humidity = document.createElement("li");
-    day2Humidity.textContent = "Humidity: " + getWeather.daily[1].humidity + " %";
-    day2List.appendChild(day2Humidity); 
+        //Variables for card
+        var date = "(" + unixTimeConverter(date) + ")";    
+        var iconDay = getWeather.daily[i].weather[0].icon;
+            
+        var temp = "Temp: " + getWeather.daily[i].temp.day + "℉";
+        var wind = "Wind: " + getWeather.daily[i].wind_speed + " MPH";
+        var humidity = "Humidity: " + getWeather.daily[i].humidity + " %";
+        
+        var elementContainer = document.createElement("div");
+        elementContainer.classList = "col-md-2 small-card";
+        
+        var img = document.createElement("img");
+        img.src = "http://openweathermap.org/img/w/"+ iconDay +".png";
+               
+        var futureContainerEl = document.createElement("div");
 
-//Day 3
-    //Day 3 Date
-    var date3 = getWeather.daily[3].dt;
-    var iconDay3 = getWeather.daily[3].weather[0].icon;
-    day3DateEl.textContent = "(" + unixTimeConverter(date3) + ")";
-    weatherIcon("icon3", iconDay3);
-    //Day 3 temp
-    var day3Temp = document.createElement("li");
-    day3Temp.textContent = "Temp: " + getWeather.daily[3].temp.day + "℉";
-    day3List.appendChild(day3Temp);
-    //Day 3 Wind
-    var day3WindSpeed = document.createElement("li");
-    day3WindSpeed.textContent = "Wind: " + getWeather.daily[3].wind_speed + " MPH";
-    day3List.appendChild(day3WindSpeed);
-    //Day 3 Humidity
-    var day3Humidity = document.createElement("li");
-    day3Humidity.textContent = "Humidity: " + getWeather.daily[3].humidity + " %";
-    day3List.appendChild(day3Humidity); 
+        var dataArr =[date,temp,wind,humidity];
 
-//Day 4
-    //Day 4 Date
-    var date4 = getWeather.daily[4].dt;
-    var iconDay4 = getWeather.daily[4].weather[0].icon;
-    day4DateEl.textContent = "(" + unixTimeConverter(date4) + ")";
-    weatherIcon("icon4", iconDay4);
-    //Day 4 temp
-    var day4Temp = document.createElement("li");
-    day4Temp.textContent = "Temp: " + getWeather.daily[4].temp.day + "℉";
-    day4List.appendChild(day4Temp);
-    //Day 4 Wind
-    var day4WindSpeed = document.createElement("li");
-    day4WindSpeed.textContent = "Wind: " + getWeather.daily[4].wind_speed + " MPH";
-    day4List.appendChild(day4WindSpeed);
-    //Day 4 Humidity
-    var day4Humidity = document.createElement("li");
-    day4Humidity.textContent = "Humidity: " + getWeather.daily[4].humidity + " %";
-    day4List.appendChild(day4Humidity); 
-
-//Day 5
-    //Day 5 Date
-    var date5 = getWeather.daily[5].dt;
-    var iconDay5 = getWeather.daily[5].weather[0].icon;
-    day5DateEl.textContent = "(" + unixTimeConverter(date5) + ")";
-    weatherIcon("icon5", iconDay5);
-    //Day 5 temp
-    var day5Temp = document.createElement("li");
-    day5Temp.textContent = "Temp: " + getWeather.daily[5].temp.day + "℉";
-    day5List.appendChild(day5Temp);
-    //Day 5 Wind
-    var day5WindSpeed = document.createElement("li");
-    day5WindSpeed.textContent = "Wind: " + getWeather.daily[5].wind_speed + " MPH";
-    day5List.appendChild(day5WindSpeed);
-    //Day 5 Humidity
-    var day5Humidity = document.createElement("li");
-    day5Humidity.textContent = "Humidity: " + getWeather.daily[5].humidity + " %";
-    day5List.appendChild(day5Humidity); 
+        for(var j =0; j<dataArr.length; j++){
+            var futureListEl = document.createElement("div");
+            futureListEl.textContent = dataArr[j];
+            futureListEl.appendChild(img);
+            futureContainerEl.appendChild(futureListEl);
+        }
+        
+        elementContainer.appendChild(futureContainerEl);
+        futureContainer.appendChild(elementContainer);
+    }       
 };
 
 var formSubmitHandler = function(event){
